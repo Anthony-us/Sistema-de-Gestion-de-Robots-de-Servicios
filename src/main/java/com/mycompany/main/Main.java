@@ -6,13 +6,14 @@ import javax.swing.JOptionPane;
 public class Main {
 
     public static void main(String[] args) {
-        ArrayList<Robot> listaRobots = new ArrayList<>(); //Lista donde se guardan los robots
+
+        ArrayList<Robot> listaRobots = new ArrayList<Robot>(); //Lista donde se guardan los robots
         int opcion = 0;
 
         do {
             try {
                 String input = JOptionPane.showInputDialog(null,
-                        "SISTEMA DE GESTION DE ROBOTS\n\n"
+                        "====SISTEMA DE GESTION DE ROBOTS====\n\n"
                         + "1. Registrar robot\n"
                         + "2. Mostrar robots\n"
                         + "3. Ejecutar tarea\n"
@@ -36,7 +37,7 @@ public class Main {
                         break;
 
                     case 3:
-                    //Ejecutar Tarea
+                        ejecutarTareaRobot(listaRobots);
                     //Aca se implementa tambien lo de la bateria (recargable)
 
                     case 4:
@@ -49,7 +50,7 @@ public class Main {
 
                     default:
                         JOptionPane.showMessageDialog(null, "Opcion invalida. Por favor"
-                                + "seleciione un número valido del 1 al 5.");
+                                + "seleccione un número valido del 1 al 5.");
                         break;
 
                 }
@@ -76,7 +77,7 @@ public class Main {
             return;
         }
         int tipoRobot = Integer.parseInt(tipo); //Se convierte el texto ingresado 
-        //por el usuario en entero´para evaluarlo en un switch
+        //por el usuario en entero para evaluarlo en un switch
 
         if (tipoRobot < 1 || tipoRobot > 3) {
             JOptionPane.showMessageDialog(null, "Tipo de robot invalido.");
@@ -109,7 +110,7 @@ public class Main {
             return;
         }
 
-        String bateriaRobot = JOptionPane.showInputDialog(null, "Ingrese el nivel de bateria (o a 100:");
+        String bateriaRobot = JOptionPane.showInputDialog(null, "Ingrese el nivel de bateria (0 a 100):");
         if (bateriaRobot == null) {
             return;
         }
@@ -123,7 +124,7 @@ public class Main {
         switch (tipoRobot) {
             case 1:
                 String deposito = JOptionPane.showInputDialog(null, "Ingrese la capacidad"
-                        + "del deposito (litros:");
+                        + " del deposito (litros):");
                 if (deposito == null) {
                     return;
                 }
@@ -137,7 +138,7 @@ public class Main {
             //Si es robot de Entrega
             case 2:
                 String peso = JOptionPane.showInputDialog(null, "Ingrese el peso maximo"
-                        + "de carga (kg):");
+                        + " de carga (kg):");
                 if (peso == null) {
                     return;
                 }
@@ -187,7 +188,7 @@ public class Main {
                         + "Código: " + rl.getCodigo() + "\n"
                         + "Nombre: " + rl.getNombre() + "\n"
                         + "Bateria: " + rl.getNivelBateria() + "\n"
-                        + "Disponible " + (rl.isDisponible() ? "Si" : "No") + "\n"
+                        + "Disponible: " + (rl.isDisponible()) + "\n"
                         + "Capacidad de Deposito: " + rl.getCapacidadDeposito() + "L\n";
 
             } else if (r instanceof RobotEntrega) {
@@ -198,8 +199,8 @@ public class Main {
                         + "Código: " + re.getCodigo() + "\n"
                         + "Nombre: " + re.getNombre() + "\n"
                         + "Bateria: " + re.getNivelBateria() + "\n"
-                        + "Disponible " + (re.isDisponible() ? "Si" : "No") + "\n"
-                        + "Capacidad de Deposito: " + re.getPesoMaximoCarga() + "kg\n";
+                        + "Disponible: " + (re.isDisponible()) + "\n"
+                        + "Peso maximo de carga: " + re.getPesoMaximoCarga() + "kg\n";
             } else if (r instanceof RobotVigilancia) {
                 RobotVigilancia rv = (RobotVigilancia) r;
 
@@ -207,8 +208,8 @@ public class Main {
                         + "Código: " + rv.getCodigo() + "\n"
                         + "Nombre: " + rv.getNombre() + "\n"
                         + "Bateria: " + rv.getNivelBateria() + "\n"
-                        + "Disponible " + (rv.isDisponible() ? "Si" : "No") + "\n"
-                        + "Capacidad de Deposito: " + rv.getDistanciaVigilada() + "m\n";
+                        + "Disponible: " + (rv.isDisponible()) + "\n"
+                        + "Distancia de Vigilancia: " + rv.getDistanciaVigilada() + "m\n";
 
             }
             //Separador visual entre robots
@@ -221,6 +222,80 @@ public class Main {
 
     }
 
+    //Implementacion del Metodo ejecutarTarea para cada robot---------------------------------------
+    public static void ejecutarTareaRobot(ArrayList<Robot> listaRobots) {
+        if (listaRobots.size() == 0) { //Validamos que haya almenos 1 robot en la lista
+            JOptionPane.showMessageDialog(null, "No hay robots registrados."); //Mostramos un mensaje en caso de que la lista este vacia
+            return;
+        }
+
+        String codigoBuscar = JOptionPane.showInputDialog("Ingrese el código del Robot (Número): "); //Buscamos el robot para ejecutar la tarea por codigo
+        if (codigoBuscar == null) { //Validamos que el codigo ingresado no este vacio
+            return;
+        }
+
+        try {
+            int codigo = Integer.parseInt(codigoBuscar);
+            Robot robot = validarCodigoRobot(listaRobots, codigo);
+
+            if (robot == null) {
+                JOptionPane.showMessageDialog(
+                        null, "No existe un robot con ese código."
+                );
+                return;
+            }
+
+            if (!robot.isDisponible()) {
+                JOptionPane.showMessageDialog(
+                        null, "El robot no está disponible.");
+                return;
+            }
+
+            if (robot.getNivelBateria() < 20.0) {
+                int opcion = Integer.parseInt(JOptionPane.showInputDialog(
+                        null,
+                        "Batería actual: " + robot.getNivelBateria()
+                        + "%\n1-Recargar\n2-Cancelar")
+                );
+
+                if (opcion == 0) {
+                    return; // Cancelo
+                } else if (opcion == 1) {
+                    robot.recargar();
+                    JOptionPane.showMessageDialog(null,
+                            "Robot recargado al 100%.");
+                } else {
+                    return;
+                }
+            }
+            //Ejecutar la tarea y mostrar lo que hizo el robot
+            String resultado = robot.ejecutarTarea();
+
+            //Restamos 15 a la bateria total que tenia el robot
+            double bateriaActual = robot.getNivelBateria();
+            double bateriaRestante = bateriaActual - 15.0;
+            robot.setNivelBateria(bateriaRestante);
+
+            //Mostramos el resultado de lo que hizo el robot y la bateria que le queda
+            JOptionPane.showMessageDialog(null,
+                    resultado + "\nBatería restante: " + bateriaRestante + "%");
+
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(
+                    null, "El código debe ser un número."
+            );
+        }
+
+    }
+    //Creamos un metodo que valide si el codigo esta repetido y si no esta repetido que siga con la tarea
+    public static Robot validarCodigoRobot(ArrayList<Robot> listaRobots, int codigo) {
+        for (Robot robot : listaRobots) {
+            if (robot.getCodigo() == codigo) {
+                return robot;
+            }
+        }
+        return null; // No se encontró
     public static void reporteGeneral(ArrayList<Robot> listaRobots) {
 
         if (listaRobots.isEmpty()) {
