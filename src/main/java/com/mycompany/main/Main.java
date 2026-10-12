@@ -39,7 +39,7 @@ public class Main {
                     case 3:
                         ejecutarTareaRobot(listaRobots);
                     //Aca se implementa tambien lo de la bateria (recargable)
-
+                        break;
                     case 4:
                         reporteGeneral(listaRobots);
                         break;
@@ -296,6 +296,8 @@ public class Main {
             }
         }
         return null; // No se encontró
+    }
+    
     public static void reporteGeneral(ArrayList<Robot> listaRobots) {
 
         if (listaRobots.isEmpty()) {
