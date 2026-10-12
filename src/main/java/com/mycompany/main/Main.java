@@ -41,8 +41,8 @@ public class Main {
                     //Aca se implementa tambien lo de la bateria (recargable)
 
                     case 4:
-                    //Reporte GEneral
-
+                        reporteGeneral(listaRobots);
+                        break;
                     case 5:
                         JOptionPane.showMessageDialog(null, "¡Gracias por usar el "
                                 + "sistema de gestion de robots!");
@@ -296,6 +296,45 @@ public class Main {
             }
         }
         return null; // No se encontró
+    public static void reporteGeneral(ArrayList<Robot> listaRobots) {
+
+        if (listaRobots.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay robots registrado", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        int totalRobots = listaRobots.size();
+        int robotsLimpieza = 0;
+        int robotsEntrega = 0;
+        int robotsVigilancia = 0;
+        int robotsBateriaBaja = 0;
+        double promedioBateria = 0;
+
+        for (Robot r : listaRobots) {
+            if (r instanceof RobotLimpieza) {
+                robotsLimpieza++;
+            } else if (r instanceof RobotEntrega) {
+                robotsEntrega++;
+            } else if (r instanceof RobotVigilancia) {
+                robotsVigilancia++;
+            }
+
+            if (r.getNivelBateria() < 30) {
+                robotsBateriaBaja++;
+            }
+
+            promedioBateria += r.getNivelBateria();
+        }
+
+        promedioBateria = promedioBateria / totalRobots;
+
+        JOptionPane.showMessageDialog(null, "REPORTE GENERAL"
+                + "\n\nTotal de robots: " + totalRobots
+                + "\nRobots de limpieza: " + robotsLimpieza
+                + "\nRobots de entrega: " + robotsEntrega
+                + "\nRobots de vigilancia: " + robotsVigilancia
+                + "\nRobots con bateria baja: " + robotsBateriaBaja
+                + "\nPromedio de bateria: " + promedioBateria);
 
     }
 }
