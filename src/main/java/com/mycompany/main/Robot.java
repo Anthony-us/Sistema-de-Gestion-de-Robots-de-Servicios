@@ -17,8 +17,17 @@ public abstract class Robot implements Recargable{
     public String toString() {
         return "Codigo: " + codigo +
                "\nNombre: " + nombre +
-               "\nNivel de Bateria: " + nivelBateria +
-               "disponible: " + (disponible);
+               "\nNivel de Bateria: " + nivelBateria + "%"+
+               "\nDisponible: " + getDisponibilidad();
+    }
+
+    //Creamos un metodo para cuando este disponible muestre "Si" si es true y "No" si es false.
+    public String getDisponibilidad() {
+        if (disponible) {
+            return "Sí";
+        } else {
+            return "No";
+        }
     }
 
     @Override

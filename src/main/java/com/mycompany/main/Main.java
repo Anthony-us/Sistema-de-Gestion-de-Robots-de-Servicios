@@ -116,6 +116,11 @@ public class Main {
         }
         double nivelBateria = Double.parseDouble(bateriaRobot); //Convertimos el texto a double
 
+        if (nivelBateria < 0 || nivelBateria > 100) {
+            JOptionPane.showMessageDialog(null, "El nivel de bateria debe estar entre 0 y 100.");
+            return;
+        }
+
         //Cuando se registra un robot siempre debe de estar DISPONIBLE
         boolean disponible = true;
 
@@ -171,7 +176,7 @@ public class Main {
 
         //Verificar si la lista esta vacia antes de mostrarla
         if (listaRobots.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "No hay robots registrados en el sistema.");
+            System.out.println("No hay robots registrados en el sistema.");
             return; //se sale si no hay nada que mostrar
         }
 
@@ -188,7 +193,7 @@ public class Main {
                         + "Código: " + rl.getCodigo() + "\n"
                         + "Nombre: " + rl.getNombre() + "\n"
                         + "Bateria: " + rl.getNivelBateria() + "\n"
-                        + "Disponible: " + (rl.isDisponible()) + "\n"
+                        + "Disponible: " + rl.getDisponibilidad() + "\n"
                         + "Capacidad de Deposito: " + rl.getCapacidadDeposito() + "L\n";
 
             } else if (r instanceof RobotEntrega) {
@@ -199,7 +204,7 @@ public class Main {
                         + "Código: " + re.getCodigo() + "\n"
                         + "Nombre: " + re.getNombre() + "\n"
                         + "Bateria: " + re.getNivelBateria() + "\n"
-                        + "Disponible: " + (re.isDisponible()) + "\n"
+                        + "Disponible: " + re.getDisponibilidad() + "\n"
                         + "Peso maximo de carga: " + re.getPesoMaximoCarga() + "kg\n";
             } else if (r instanceof RobotVigilancia) {
                 RobotVigilancia rv = (RobotVigilancia) r;
@@ -208,7 +213,7 @@ public class Main {
                         + "Código: " + rv.getCodigo() + "\n"
                         + "Nombre: " + rv.getNombre() + "\n"
                         + "Bateria: " + rv.getNivelBateria() + "\n"
-                        + "Disponible: " + (rv.isDisponible()) + "\n"
+                        + "Disponible: " + rv.getDisponibilidad() + "\n"
                         + "Distancia de Vigilancia: " + rv.getDistanciaVigilada() + "m\n";
 
             }
@@ -218,7 +223,7 @@ public class Main {
         }
 
         //Mostramos el reporte completo 
-        JOptionPane.showMessageDialog(null, mensaje);
+        System.out.println(mensaje);
 
     }
 
@@ -336,7 +341,7 @@ public class Main {
                 + "\nRobots de entrega: " + robotsEntrega
                 + "\nRobots de vigilancia: " + robotsVigilancia
                 + "\nRobots con bateria baja: " + robotsBateriaBaja
-                + "\nPromedio de bateria: " + promedioBateria);
+                + "\nPromedio de bateria: " + promedioBateria + "%");
 
     }
 }
