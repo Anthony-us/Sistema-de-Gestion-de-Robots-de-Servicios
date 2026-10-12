@@ -18,7 +18,7 @@ public abstract class Robot implements Recargable{
         return "Codigo: " + codigo +
                "\nNombre: " + nombre +
                "\nNivel de Bateria: " + nivelBateria +
-               "disponible: " + (disponible ? "Si" : "No");
+               "disponible: " + (disponible);
     }
 
     @Override
